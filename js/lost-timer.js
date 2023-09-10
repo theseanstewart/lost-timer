@@ -17,6 +17,8 @@ var lostTimer = ( function() {
 	 * 		str initialSeconds 	(optional|defaults to 108) seconds to start the timer at
 	 * 		str height       	(optional|defaults to 200) height of the timer
 	 * 		fun onTick       	(optional) run custom javascript on timer tick down
+	 * 		bool showTimerOnly  (optional) hides everything but the timer
+	 * 		int failureResetSeconds (optional) the number of seconds to reset the countdown after system failure
 	 *
 	 * @return void
 	 */
@@ -38,7 +40,9 @@ var lostTimer = ( function() {
 		self.mode = 'mode' in args ? args.mode : 'live';
 
 		// store the initial seconds default to 108 minutes
-		self.initialSeconds = 'initialSeconds' in args ? args.initialSeconds : ( 60 * 108 );
+		self.initialSeconds = 'initialSeconds' in args ? (args.initialSeconds - (args.initialSeconds % 60)) : ( 60 * 108 );
+
+		console.log('initialSeconds', self.initialSeconds % 60);
 
 		// default height to 200 if not specified
 		self.height = 'height' in args ? args.height : 200;
@@ -339,6 +343,8 @@ var lostTimer = ( function() {
 		// calculate minutes and seconds
         self.minutes = parseInt( self.totalSeconds / 60 );
         self.seconds = parseInt( self.totalSeconds % 60 );
+
+		console.log('self.seconds', self.seconds);
 
         if ( self.minutes < 100 && self.minutes > 9 ) { // two digit range needing one zero
         	self.minutes = '0' + self.minutes;
