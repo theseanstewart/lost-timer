@@ -21,6 +21,9 @@ var lostTimer = ( function() {
 	 * @return void
 	 */
 	var lostTimer = function( args ) {
+
+		console.log('lostTimer', args);
+
 		// give us our self
 		var self = this;
 
@@ -40,6 +43,9 @@ var lostTimer = ( function() {
 		// default height to 200 if not specified
 		self.height = 'height' in args ? args.height : 200;
 		self.width = self.height * .6;
+
+		self.showTimerOnly = 'showTimerOnly' in args ? args.showTimerOnly : false;
+		self.failureResetSeconds = 'failureResetSeconds' in args ? args.failureResetSeconds : 60;
 
 		if ( typeof args.onTick !== 'undefined' ) { // bind custom function
 			self.onTick = args.onTick;
@@ -62,6 +68,11 @@ var lostTimer = ( function() {
 
 		// start the timer countdown
         self.startTimer();
+
+		if(self.showTimerOnly){
+			$( '.console-container' ).hide();
+			$( '.timer-modes' ).hide();
+		}
 	};
 
 	/**
@@ -615,7 +626,7 @@ var lostTimer = ( function() {
 
 			// make the body sstop hake
 			$( 'body' ).removeClass( 'lost-timer-shake' );
-		}, 36000 );
+		}, 20000 );
 
 		self.thudTimeout = setTimeout( function() { //  play lost thud after 46 seconds game over
 			// show and fade in white screen
@@ -623,7 +634,11 @@ var lostTimer = ( function() {
 			$( '.lost-timer-end-screen' ).animate( { opacity: 1 }, 500 );
 
 			self.playAudio( 'thud' );
-		}, 46000 );
+		}, 30000 );
+
+		self.thudResetTimeout = setTimeout( function() { //  Reset after the thud
+			self.reset();
+		}, 40000);
 	};
 
 	/**
@@ -648,6 +663,7 @@ var lostTimer = ( function() {
 		// clear timeouts system failure and thud
 		clearTimeout( self.systemFailureTimout );
 		clearTimeout( self.thudTimeout );
+		clearTimeout( self.thudResetTimeout );
 
 		// play flipping reset sound
 		self.playAudio( 'reset' );

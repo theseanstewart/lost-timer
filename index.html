@@ -108,8 +108,38 @@
 				// get url params
 				var urlParams = new URLSearchParams( window.location.search );
 
+				var countdownTotalSeconds = 108 * 60;
+				
 				// get seconds from url
-				var seconds = urlParams.get( 'seconds' ) ? urlParams.get( 'seconds' ) : 60 * 108;
+				var seconds = urlParams.get( 'seconds' ) ? urlParams.get( 'seconds' ) : countdownTotalSeconds;
+				
+				var startDateParam = urlParams.get('startDate') || null;
+
+				if(startDateParam){
+					
+					var startDate = new Date(startDateParam);
+
+					console.log('startDateParam', startDate);
+					
+					var secondsSinceStartDate = Math.floor(Math.abs((new Date().getTime() - startDate.getTime()) / 1000));
+					var totalCountdownRuns = secondsSinceStartDate / countdownTotalSeconds;
+					
+					var secondsRemaining = countdownTotalSeconds - Math.round((1 - (Math.ceil(totalCountdownRuns) - totalCountdownRuns)) * countdownTotalSeconds);
+					
+					seconds = secondsRemaining < 5 ? 60 : secondsRemaining;
+
+					if(secondsRemaining < 5){
+						seconds = 60;
+					}
+					var debugData = {
+						seconds: seconds,
+						secondsRemaining: secondsRemaining,
+						totalCountdownRuns: totalCountdownRuns,
+						secondsSinceStartDate: secondsSinceStartDate
+					}
+					console.log(debugData);
+
+				}
 
 				var timer = new lostTimer( { // create timer
 					initialSeconds: parseInt( seconds ), // initial seconds to begin the timer at
@@ -123,7 +153,9 @@
 							$( '.my-console' ).prop( 'disabled', true );
 							$( '.my-console' ).val( '' );
 						}
-					}
+					},
+					showTimerOnly: urlParams.get( 'showTimerOnly' ),
+					failureResetSeconds: urlParams.get('failureResetSeconds')
 				} );
 
 				$( '.my-console' ).on( 'keyup', function( e ) { // on keyup for console input
