@@ -37,7 +37,7 @@
 				width: 692px;
 				margin: 0 auto;
 				background: #272727;
-				box-shadow: 0px 0px 10px rgba( 255, 255, 255, 0.5 );
+				box-shadow: 0px 0px 20px 15px rgb(0 0 0 / 70%);
 				border-radius: 10px;
 				padding: 20px;
 				margin-top: 20px;
@@ -45,9 +45,9 @@
 			}
 
 			@media only screen and (max-width: 700px) {
-				.my-timer-container {
-					width: 287px;
-				}
+				/*.my-timer-container {
+					width: 500px;
+				}*/
 			}
 
 			.console-container {
@@ -141,10 +141,14 @@
 
 				}
 
+				var countdownHeight = urlParams.get( 'height' ) ? parseInt( urlParams.get( 'height' ) ) : null;
+
+				var defaultHeight = $( window ).width() > 700 ? 200 : 70;
+
 				var timer = new lostTimer( { // create timer
 					initialSeconds: parseInt( seconds ), // initial seconds to begin the timer at
 					mode: urlParams.get( 'mode' ), // specify mode of dev|live
-					height: $( window ).width() > 700 ? 200 : 70, // specify the height of the timer
+					height: countdownHeight || defaultHeight, // specify the height of the timer
 					onTick: function() { // do things on each tick of the countdown
 						if ( timer.totalSeconds <= 240 && timer.totalSeconds > 0 ) { // enable numbers input and focus on input
 							$( '.my-console' ).prop( 'disabled', false );

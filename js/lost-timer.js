@@ -42,8 +42,6 @@ var lostTimer = ( function() {
 		// store the initial seconds default to 108 minutes
 		self.initialSeconds = 'initialSeconds' in args ? (args.initialSeconds - (args.initialSeconds % 60)) : ( 60 * 108 );
 
-		console.log('initialSeconds', self.initialSeconds % 60);
-
 		// default height to 200 if not specified
 		self.height = 'height' in args ? args.height : 200;
 		self.width = self.height * .6;
@@ -343,8 +341,6 @@ var lostTimer = ( function() {
 		// calculate minutes and seconds
         self.minutes = parseInt( self.totalSeconds / 60 );
         self.seconds = parseInt( self.totalSeconds % 60 );
-
-		console.log('self.seconds', self.seconds);
 
         if ( self.minutes < 100 && self.minutes > 9 ) { // two digit range needing one zero
         	self.minutes = '0' + self.minutes;
